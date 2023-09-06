@@ -1,4 +1,10 @@
-# LibriSpeechMix
+# Introduction
+This repository is built based on [LibriSpeechMix](https://github.com/NaoyukiKanda/LibriSpeechMix). Since the open source code for building LibriSpeechMix training set is not found at present, 
+it is reproduced according to the description of the paper
+
+## Training Data
+
+## Evaluation Data
 
 LibriSpeechMix is the dastaset used in [Serialized Output Training for End-to-End Overlapped Speech Recognition](https://www.isca-speech.org/archive/Interspeech_2020/pdfs/0999.pdf) and [Joint Speaker Counting, Speech Recognition, and Speaker Identification for Overlapped Speech of Any Number of Speakers](https://www.isca-speech.org/archive/Interspeech_2020/pdfs/1085.pdf) for evaluating multi-talker speech recognition systems. The dataset has been derived from the LibriSpeech "dev_clean" and "test_clean" sets.
 - Notable features
@@ -14,12 +20,12 @@ LibriSpeechMix is the dastaset used in [Serialized Output Training for End-to-En
   - Naoyuki Kanda, Zhong Meng, Liang Lu, Yashesh Gaur, Xiaofei Wang, Zhuo Chen, Takuya Yoshioka: Minimum Bayes Risk Training for End-to-End Speaker-Attributed ASR,	arXiv:2011.02921, 2020. [[pdf]](https://arxiv.org/pdf/2011.02921.pdf)
   -  Naoyuki Kanda, Xuankai Chang, Yashesh Gaur, Xiaofei Wang, Zhong Meng, Zhuo Chen, Takuya Yoshioka: Investigation of End-To-End Speaker-Attributed ASR for Continuous Multi-Talker Recordings. Proc. SLT, 2021 (to appear). [[pdf]](https://arxiv.org/pdf/2008.04546.pdf)
 
-## Prerequisites
+### Prerequisites
 - Linux
   - python3
   - flac
 
-## How to Generate Data
+### How to Generate Data
 The following commands first download the LibriSpeech evaluation data ("dev_clean" and "test_clean") and then generate the mixed audio.
 ```sh
 $ pip install soundfile librosa numpy
@@ -36,8 +42,8 @@ list/
 └── test-clean-3mix.jsonl
 ```
 
-## Data Format of *.jsonl file
-### Each line of *.jsonl corresponds to a string of JSON data.
+### Data Format of *.jsonl file
+#### Each line of *.jsonl corresponds to a string of JSON data.
 |Element|Type|Meaning|
 |---|---|---|
 |id|Required|Utterance id|
@@ -51,7 +57,7 @@ list/
 |durations||Duration (in second) of each original wav file|
 |genders||Gender of the speaker of each utterance in the mixed audio|
 
-### Example of 2-speaker-mixture audio (indented for visibility)
+#### Example of 2-speaker-mixture audio (indented for visibility)
 ```
 {
     "id": "dev-clean-2mix/dev-clean-2mix-0000", 
@@ -77,7 +83,7 @@ list/
 }
 ```
 
-## Optional list
+### Optional list
 - ./list/optional/ directory contains optional *jsonl files with different profile settings for SA-ASR.
 - Each file has a name of [dev|test]-clean-[1|2|3]mix-8prof-[1|2|5|10]utt.jsonl.
   - [dev|test] indicates if this is development data or test data
@@ -85,7 +91,7 @@ list/
   - [1|2|5|10]utt indicates the number of utterances for extracting a speaker profile for each speaker
 - Files with a suffix of '-8prof-2utt.jsonl' is identical to the files in ./list/ directory.
 
-## When referring to this dataset, one of the following papers may be cited.
+### When referring to this dataset, one of the following papers may be cited.
 ```
 @inproceedings{kanda2020serialized,
   title={Serialized Output Training for End-to-End Overlapped Speech Recognition},
