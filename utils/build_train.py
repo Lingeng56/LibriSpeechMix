@@ -6,6 +6,7 @@ import soundfile
 import numpy as np
 import librosa
 from collections import defaultdict
+from tqdm import tqdm
 
 
 
@@ -29,7 +30,7 @@ def main(args):
     speaker_list = set(list(speaker2wav.keys()))
     res = []
     base_path = args.data_dir + '-%dmix' % args.num_speakers
-    for idx, wav_path in enumerate(path_list):
+    for idx, wav_path in tqdm(enumerate(path_list), total=len(path_list), desc='Building %d Mix Data' % args.num_speakers):
         res_id = os.path.join(base_path, base_path + '-%d' % idx)
         res_path = res_id + '.wav'
         audio, _ = soundfile.read(wav_path)
@@ -53,10 +54,10 @@ def main(args):
                     audio = combine_audio(audio, additional_audio)
                     break
         sorted_idx = np.argsort(delays).tolist()
-        wav_paths = wav_paths[sorted_idx]
-        transcripts = transcripts[sorted_idx]
-        used_speakers = list(used_speakers)[sorted_idx]
-        delays = delays[sorted_idx]
+        wav_paths = np.array(wav_paths)[sorted_idx].tolist()
+        transcripts = np.array(transcripts)[sorted_idx].tolist()
+        used_speakers = np.array(list(used_speakers))[sorted_idx].tolist()
+        delays = np.array(delays)[sorted_idx].tolist()
         res.append({'id': res_id,
                     'mixed_wav': res_path,
                     'texts': transcripts,
@@ -70,16 +71,16 @@ def main(args):
 
 def combine_audio(audio, additional_audio):
     target_length = max(len(audio), len(additional_audio))
-    audio = librosa.util.fix_length(audio, target_length)
-    additional_audio = librosa.util.fix_length(additional_audio, target_length)
+    audio = librosa.util.fix_length(audio, size=target_length)
+    additional_audio = librosa.util.fix_length(additional_audio, size=target_length)
     audio = audio + additional_audio
     return audio
 
 
 def is_overlap(audio, additional_audio):
     target_length = max(len(audio), len(additional_audio))
-    audio = librosa.util.fix_length(audio, target_length)
-    additional_audio = librosa.util.fix_length(additional_audio, target_length)
+    audio = librosa.util.fix_length(audio, size=target_length)
+    additional_audio = librosa.util.fix_length(additional_audio, size=target_length)
     nonzero_indices = np.nonzero(audio)
     return additional_audio[nonzero_indices].sum() != 0.0
 
